@@ -1,0 +1,669 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>クートラ翻訳機</title>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="クートラ翻訳機">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#FFF8ED">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+<link rel="manifest" href="manifest.json">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@400;500;700;900&family=Mochiy+Pop+One&family=JetBrains+Mono:wght@400;500&display=swap');
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+body {
+  font-family: 'Zen Maru Gothic', sans-serif;
+  min-height: 100vh;
+  padding: 30px 16px 60px;
+  background-color: #FFF8ED;
+  background-image: radial-gradient(#FFE3C2 1.5px, transparent 1.5px);
+  background-size: 22px 22px;
+  color: #4A3324;
+}
+.wrap { max-width: 460px; margin: 0 auto; }
+
+.mascot-row { display: flex; align-items: center; gap: 10px; margin-bottom: 16px; }
+.cat-face {
+  width: 58px; height: 58px; border-radius: 50%; flex-shrink: 0; position: relative;
+  box-shadow: 0 6px 0 -1px rgba(0,0,0,0.08);
+}
+.cat-face.bicolor { background: linear-gradient(to bottom, #2E2A28 67%, #FFFDF8 67%); }
+.cat-face.black { background: #24211F; }
+.cat-ear { position: absolute; top: -11px; width: 0; height: 0;
+  border-left: 10px solid transparent; border-right: 10px solid transparent; }
+.cat-ear.l { left: 3px; transform: rotate(-18deg); }
+.cat-ear.r { right: 3px; transform: rotate(18deg); }
+.cat-face.bicolor .cat-ear { border-bottom: 18px solid #2E2A28; }
+.cat-face.black .cat-ear { border-bottom: 18px solid #24211F; }
+.cat-eye { position: absolute; top: 26px; width: 5px; height: 6px; border-radius: 50%; }
+.cat-eye.l { left: 17px; } .cat-eye.r { right: 17px; }
+.cat-face.bicolor .cat-eye { background: #8FBF7F; }
+.cat-face.black .cat-eye { background: #F0B84D; }
+.cat-nose { position: absolute; top: 35px; left: 50%; transform: translateX(-50%);
+  width: 0; height: 0; border-left: 3px solid transparent; border-right: 3px solid transparent;
+  border-top: 4px solid #E8899A; }
+.recording .cat-face { animation: bob 0.7s ease-in-out infinite; }
+@keyframes bob { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-4px); } }
+@media (prefers-reduced-motion: reduce) { .recording .cat-face { animation: none; } }
+
+.bubble {
+  flex: 1; background: #FFFFFF; border-radius: 18px; padding: 12px 14px;
+  font-weight: 700; font-size: 13.5px; color: #4A3324; position: relative;
+  box-shadow: 0 6px 0 var(--bshadow); text-align: center; min-height: 20px;
+}
+.bubble::before, .bubble::after {
+  content: ''; position: absolute; bottom: 12px;
+  border-top: 7px solid transparent; border-bottom: 7px solid transparent;
+}
+.bubble::before { left: -7px; border-right: 9px solid #FFFFFF; }
+.bubble::after { right: -7px; border-left: 9px solid #FFFFFF; }
+
+.title { font-family: 'Mochiy Pop One', sans-serif; font-size: 26px; color: #FF7A52; text-align: center; margin: 4px 0 2px; }
+.tagline { text-align: center; font-size: 12px; color: #B8894F; margin: 0 0 4px; font-weight: 700; }
+.caveat-line { text-align: center; font-size: 10.5px; color: #C4A97C; margin: 0 0 20px; line-height: 1.6; }
+
+.btnrow { display: flex; gap: 10px; margin-bottom: 8px; }
+.btn {
+  flex: 1; display: flex; align-items: center; justify-content: center; gap: 8px;
+  padding: 15px 8px; border-radius: 18px; border: none; cursor: pointer;
+  font-family: 'Zen Maru Gothic', sans-serif; font-weight: 900; font-size: 13.5px; color: #fff;
+}
+.btn:active { transform: scale(0.97); }
+.btn:disabled { opacity: 0.45; cursor: not-allowed; }
+.btn.rec { background: #FF8B6B; box-shadow: 0 5px 0 #D9633F; }
+.btn.rec.on { background: #FF5D5D; box-shadow: 0 5px 0 #C23A3A; }
+.btn.up { background: #6EC6E8; box-shadow: 0 5px 0 #3D9BC0; }
+
+.status-row {
+  min-height: 20px; margin: 10px 0 18px;
+  font-size: 12px; font-weight: 700; color: #6EA8C6;
+  display: flex; align-items: center; gap: 6px;
+}
+.status-row.error { color: #E85A4F; }
+.spin { display: inline-block; animation: spin 1s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.result-card { background: #FFFFFF; border-radius: 22px; padding: 18px; margin-bottom: 20px; border: 3px solid #FFE3C2; }
+.tag-row { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-bottom: 10px; }
+.tag { display: inline-flex; align-items: center; gap: 4px; font-weight: 900; font-size: 11.5px; padding: 5px 12px; border-radius: 999px; }
+.source-tag { font-size: 10px; font-weight: 700; padding: 4px 9px; border-radius: 999px; background: #FFF3E0; color: #B8894F; }
+.result-line { font-size: 19px; font-weight: 900; color: #4A3324; margin: 0 0 4px; }
+.caveat { font-size: 11px; color: #C4A97C; margin: 0 0 14px; }
+
+.trace-svg { width: 100%; height: 84px; display: block; margin-bottom: 12px; }
+.trace-baseline { stroke: #FFE3C2; stroke-width: 1; }
+.trace-wave { stroke: #E0C9A0; stroke-width: 1.3; opacity: 0.8; }
+.trace-pitch { stroke: #6EC6E8; stroke-width: 2.3; stroke-linecap: round; stroke-linejoin: round; }
+
+audio { width: 100%; height: 32px; margin-bottom: 12px; }
+
+.detail-toggle, .refs-toggle, .link-btn {
+  display: flex; align-items: center; gap: 6px;
+  background: none; border: none; cursor: pointer;
+  font-family: 'Zen Maru Gothic', sans-serif; font-weight: 700; font-size: 11.5px;
+  color: #B8894F; padding: 0;
+}
+.detail-grid {
+  margin-top: 12px; margin-bottom: 4px;
+  display: grid; grid-template-columns: 1fr 1fr; gap: 8px 14px;
+  font-family: 'JetBrains Mono', monospace; font-size: 10.5px;
+  color: #B8894F; background: #FFF8ED; border-radius: 12px; padding: 12px;
+}
+.detail-grid .v { color: #4A3324; font-weight: 700; }
+
+.correct-toggle { margin-top: 14px; padding-top: 12px; border-top: 2px dashed #FFE3C2; }
+.correct-toggle .link-btn { margin-bottom: 10px; }
+.chip-row { display: flex; flex-wrap: wrap; gap: 6px; }
+.chip { font-size: 11px; font-weight: 900; padding: 6px 12px; border-radius: 999px; border: none; cursor: pointer; font-family: 'Zen Maru Gothic', sans-serif; }
+
+.section-head { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 12px; }
+.section-head h2 { font-family: 'Mochiy Pop One', sans-serif; font-size: 15px; color: #FF7A52; margin: 0; }
+.count { font-family: 'JetBrains Mono', monospace; font-size: 10.5px; color: #B8894F; }
+.head-actions { display: flex; gap: 14px; align-items: center; }
+
+.log-empty { font-size: 12px; color: #B8894F; border: 2px dashed #FFE3C2; border-radius: 14px; padding: 20px; text-align: center; }
+.log-entry {
+  display: flex; align-items: center; gap: 10px; background: #FFFFFF;
+  border-radius: 14px; padding: 10px 12px; margin-bottom: 8px;
+  border-left: 6px solid; font-size: 12.5px; color: #4A3324; font-weight: 700; cursor: pointer;
+}
+.log-time { font-size: 10.5px; color: #B8894F; width: 58px; flex-shrink: 0; font-weight: 700; }
+.log-detail { margin-top: -2px; margin-bottom: 8px; padding: 0 4px 8px 14px; font-size: 11px; color: #B8894F; }
+.log-detail p { margin: 0 0 6px; font-style: italic; }
+
+.refs-section { margin-top: 30px; border-top: 2px dashed #FFE3C2; padding-top: 16px; }
+.refs-list { margin: 12px 0 0; padding-left: 18px; font-size: 11px; line-height: 1.9; color: #B8894F; }
+.footer-note { margin-top: 14px; font-size: 10.5px; line-height: 1.8; color: #C4A97C; }
+.hostnote { margin-top: 20px; font-size: 10px; line-height: 1.8; color: #D9C7A0; text-align: center; }
+</style>
+</head>
+<body>
+<div id="app-root">
+  <div id="app-content"></div>
+  <input type="file" id="file-input" accept="audio/*" style="display:none">
+</div>
+
+<script>
+/* ---------------------------------------------------------------
+   音響特徴抽出 — 自己相関法によるピッチ推定 + エンベロープ解析
+--------------------------------------------------------------- */
+function autocorrelate(buffer, sampleRate) {
+  const SIZE = buffer.length;
+  let rms = 0;
+  for (let i = 0; i < SIZE; i++) rms += buffer[i] * buffer[i];
+  rms = Math.sqrt(rms / SIZE);
+  if (rms < 0.008) return { freq: -1, rms, confidence: 0 };
+
+  let r1 = 0, r2 = SIZE - 1;
+  const thresh = 0.2;
+  for (let i = 0; i < SIZE / 2; i++) if (Math.abs(buffer[i]) < thresh) { r1 = i; break; }
+  for (let i = 1; i < SIZE / 2; i++) if (Math.abs(buffer[SIZE - i]) < thresh) { r2 = SIZE - i; break; }
+  const trimmed = buffer.slice(r1, r2);
+  const n = trimmed.length;
+  if (n < 8) return { freq: -1, rms, confidence: 0 };
+
+  const c = new Float32Array(n);
+  for (let i = 0; i < n; i++) {
+    let sum = 0;
+    for (let j = 0; j < n - i; j++) sum += trimmed[j] * trimmed[j + i];
+    c[i] = sum;
+  }
+  let d = 0;
+  while (d < n - 1 && c[d] > c[d + 1]) d++;
+  let maxval = -1, maxpos = -1;
+  for (let i = d; i < n; i++) if (c[i] > maxval) { maxval = c[i]; maxpos = i; }
+
+  let T0 = maxpos;
+  if (T0 > 0 && T0 < n - 1) {
+    const x1 = c[T0 - 1], x2 = c[T0], x3 = c[T0 + 1];
+    const a = (x1 + x3 - 2 * x2) / 2;
+    const b = (x3 - x1) / 2;
+    if (a) T0 = T0 - b / (2 * a);
+  }
+  const freq = T0 > 0 ? sampleRate / T0 : -1;
+  const confidence = c[0] ? maxval / c[0] : 0;
+  return { freq, rms, confidence };
+}
+
+function downsample(arr, n) {
+  const out = [];
+  const step = Math.max(1, Math.floor(arr.length / n));
+  for (let i = 0; i < arr.length && out.length < n; i += step) out.push(arr[i]);
+  return out;
+}
+
+function estimateZcrHz(buffer, sampleRate) {
+  let crossings = 0;
+  for (let i = 1; i < buffer.length; i++) {
+    if ((buffer[i] >= 0) !== (buffer[i - 1] >= 0)) crossings++;
+  }
+  const durationSec = buffer.length / sampleRate || 1;
+  return crossings / (2 * durationSec);
+}
+
+function extractFeatures(audioBuffer) {
+  const sampleRate = audioBuffer.sampleRate;
+  const raw = audioBuffer.getChannelData(0);
+
+  const winSize = Math.floor(sampleRate * 0.02);
+  const numWins = Math.floor(raw.length / winSize);
+  if (numWins < 4) return { tooQuiet: true };
+
+  const winRms = [];
+  let maxRms = 0;
+  for (let i = 0; i < numWins; i++) {
+    let sum = 0;
+    for (let j = 0; j < winSize; j++) { const s = raw[i * winSize + j]; sum += s * s; }
+    const rms = Math.sqrt(sum / winSize);
+    winRms.push(rms);
+    if (rms > maxRms) maxRms = rms;
+  }
+  if (maxRms < 0.01) return { tooQuiet: true };
+
+  const threshold = maxRms * 0.08;
+  let startWin = 0, endWin = numWins - 1;
+  while (startWin < numWins && winRms[startWin] < threshold) startWin++;
+  while (endWin > startWin && winRms[endWin] < threshold) endWin--;
+  if (startWin >= endWin) return { tooQuiet: true };
+
+  const startSample = startWin * winSize;
+  const endSample = Math.min(raw.length, (endWin + 1) * winSize);
+  const trimmed = raw.slice(startSample, endSample);
+  const duration = trimmed.length / sampleRate;
+  if (duration < 0.12) return { tooQuiet: true };
+
+  const zcr = estimateZcrHz(trimmed, sampleRate);
+
+  const frameSize = 1024, hop = 512;
+  const pitches = [], rmsSeries = [];
+  for (let i = 0; i + frameSize <= trimmed.length; i += hop) {
+    const frame = trimmed.slice(i, i + frameSize);
+    const r = autocorrelate(frame, sampleRate);
+    rmsSeries.push(r.rms);
+    pitches.push(r.freq > 150 && r.freq < 3000 && r.confidence > 0.3 ? r.freq : null);
+  }
+
+  const voiced = pitches.filter((p) => p !== null);
+  const voicedRatio = voiced.length / (pitches.length || 1);
+  const meanPitch = voiced.length ? voiced.reduce((a, b) => a + b, 0) / voiced.length : 0;
+
+  const cryBandFrames = pitches.filter((p) => p !== null && p >= 220 && p <= 520).length;
+  const soliScore = cryBandFrames / (pitches.length || 1);
+
+  const firstThird = voiced.slice(0, Math.max(1, Math.ceil(voiced.length / 3)));
+  const lastThird = voiced.slice(-Math.max(1, Math.ceil(voiced.length / 3)));
+  const avgFirst = firstThird.length ? firstThird.reduce((a, b) => a + b, 0) / firstThird.length : 0;
+  const avgLast = lastThird.length ? lastThird.reduce((a, b) => a + b, 0) / lastThird.length : 0;
+  const contourDelta = avgLast - avgFirst;
+
+  const variance = voiced.length ? voiced.reduce((a, b) => a + (b - meanPitch) ** 2, 0) / voiced.length : 0;
+  const stdev = Math.sqrt(variance);
+
+  const maxFrameRms = Math.max(...rmsSeries, 0.0001);
+  const peakThresh = maxFrameRms * 0.5;
+  let syllables = 0, above = false;
+  for (const r of rmsSeries) {
+    if (r > peakThresh && !above) { syllables++; above = true; }
+    else if (r <= peakThresh * 0.6) { above = false; }
+  }
+
+  let purrScore = 0;
+  if (rmsSeries.length > 8) {
+    const mean = rmsSeries.reduce((a, b) => a + b, 0) / rmsSeries.length;
+    const envArr = Float32Array.from(rmsSeries.map((r) => r - mean));
+    const envRate = sampleRate / hop;
+    const er = autocorrelate(envArr, envRate);
+    if (er.freq > 15 && er.freq < 45 && er.confidence > 0.3) purrScore = er.confidence;
+  }
+
+  return {
+    duration, meanPitch, voicedRatio, contourDelta, stdev, syllables, purrScore, soliScore, zcr,
+    waveform: downsample(Array.from(trimmed), 220),
+    pitchContour: pitches,
+  };
+}
+
+/* ---------------------------------------------------------------
+   分類ルール
+--------------------------------------------------------------- */
+const CATEGORY = {
+  purr: { key: "purr", label: "ゴロゴロ・満足", color: "#8FD14F", text: "#2F4A17",
+    lines: ["あー、幸せ…", "このままずっとここにいたい", "満足度、いま最高潮です"] },
+  solicitationPurr: { key: "solicitationPurr", label: "せがみゴロゴロ・訴え", color: "#F2A65A", text: "#5C3410",
+    lines: ["ねえ、これ地味に効くでしょ", "ゴロゴロしてるけど本当は催促です", "そろそろ本気でお願いしたいのですが"] },
+  hiss: { key: "hiss", label: "シャー・威嚇", color: "#FF5D5D", text: "#FFFFFF",
+    lines: ["シャーッ!それ以上はダメ", "びっくりした、離れて", "反射的に出た警告です"] },
+  growl: { key: "growl", label: "唸り・警戒", color: "#C2453A", text: "#FFFFFF",
+    lines: ["ちょっと、それ以上は近づかないで", "今、機嫌よくないので", "警戒中です"] },
+  chirp: { key: "chirp", label: "チャープ・トリル", color: "#6EC6E8", text: "#0B3B4E",
+    lines: ["わくわく!遊ぼう遊ぼう!", "見て見て、これ気になる!", "ちょっと興奮気味です"] },
+  yowl: { key: "yowl", label: "長鳴き・強い訴え", color: "#B98CE0", text: "#3A1F5C",
+    lines: ["聞いて、これは重要なことなの", "本気で困ってるんだけど", "真剣に伝えたいことがあります"] },
+  greeting: { key: "greeting", label: "挨拶・呼びかけ", color: "#FF8B6B", text: "#5C2410",
+    lines: ["ねえねえ、来て来て!", "ただいまー、お出迎えしてね", "ねぇ聞いて!"] },
+  demand: { key: "demand", label: "要求・不満", color: "#FFD34E", text: "#5C4700",
+    lines: ["ごはん、まだ?", "それ、気に入らないんですけど", "早くしてよ〜"] },
+  unclear: { key: "unclear", label: "判定不能", color: "#C9BEA8", text: "#4A3D28",
+    lines: ["うまく聞き取れませんでした"] },
+};
+const CATEGORY_LIST = Object.values(CATEGORY).filter((c) => c.key !== "unclear");
+
+function classify(f) {
+  if (f.tooQuiet) return CATEGORY.unclear;
+  if (f.purrScore > 0.4 && f.voicedRatio < 0.3) {
+    if (f.soliScore > 0.12) return CATEGORY.solicitationPurr;
+    return CATEGORY.purr;
+  }
+  if (f.duration < 0.45 && f.zcr > 1500 && f.voicedRatio < 0.25) return CATEGORY.hiss;
+  if (f.voicedRatio < 0.35 && f.duration > 0.5) return CATEGORY.growl;
+  if (f.syllables >= 3 && f.duration < 2.5) return CATEGORY.chirp;
+  if (f.duration > 2.0 && f.stdev > 100) return CATEGORY.yowl;
+  if (f.contourDelta > 30) return CATEGORY.greeting;
+  return CATEGORY.demand;
+}
+
+function featureVector(f) {
+  return [
+    f.duration / 2, (f.meanPitch || 0) / 600, f.voicedRatio, f.contourDelta / 200,
+    f.stdev / 200, f.syllables / 5, f.purrScore, f.soliScore, (f.zcr || 0) / 3000,
+  ];
+}
+function vectorDistance(a, b) {
+  let sum = 0;
+  for (let i = 0; i < a.length; i++) sum += (a[i] - b[i]) ** 2;
+  return Math.sqrt(sum);
+}
+function nearestCalibration(vector, list, threshold) {
+  threshold = threshold || 0.35;
+  if (!list || !list.length) return null;
+  let best = null, bestDist = Infinity;
+  for (const item of list) {
+    const d = vectorDistance(vector, item.vector);
+    if (d < bestDist) { bestDist = d; best = item; }
+  }
+  return bestDist < threshold ? best : null;
+}
+
+const STORAGE_KEY = "kutora-log";
+const CALIBRATION_KEY = "kutora-calibration";
+
+/* ---------------------------------------------------------------
+   描画ヘルパー
+--------------------------------------------------------------- */
+function escapeHtml(s) {
+  return String(s).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+}
+
+function catFaceHtml(variant) {
+  return '<div class="cat-face ' + variant + '">' +
+    '<div class="cat-ear l"></div><div class="cat-ear r"></div>' +
+    '<div class="cat-eye l"></div><div class="cat-eye r"></div>' +
+    '<div class="cat-nose"></div></div>';
+}
+
+function traceViewHtml(waveform, pitchContour) {
+  if (!waveform || !waveform.length) return "";
+  const w = 600, h = 110, mid = h / 2;
+  const max = Math.max.apply(null, waveform.map(Math.abs).concat([0.001]));
+  const wavePts = waveform.map((v, i) => (i / (waveform.length - 1)) * w + "," + (mid - (v / max) * (mid - 6))).join(" ");
+
+  let segmentsStr = "";
+  if (pitchContour && pitchContour.length) {
+    const voicedVals = pitchContour.filter((p) => p !== null);
+    const lo = voicedVals.length ? Math.min.apply(null, voicedVals) : 150;
+    const hi = voicedVals.length ? Math.max.apply(null, voicedVals) : 800;
+    const range = Math.max(hi - lo, 40);
+    let segment = [];
+    const segments = [];
+    pitchContour.forEach((p, i) => {
+      const x = (i / (pitchContour.length - 1)) * w;
+      if (p === null) { if (segment.length) { segments.push(segment); segment = []; } return; }
+      const y = h - 10 - ((p - lo) / range) * (h - 24);
+      segment.push(x + "," + y);
+    });
+    if (segment.length) segments.push(segment);
+    segmentsStr = segments.map((s) => '<polyline points="' + s.join(" ") + '" class="trace-pitch" fill="none" />').join("");
+  }
+
+  return '<svg viewBox="0 0 ' + w + ' ' + h + '" class="trace-svg" preserveAspectRatio="none">' +
+    '<line x1="0" y1="' + mid + '" x2="' + w + '" y2="' + mid + '" class="trace-baseline" />' +
+    '<polyline points="' + wavePts + '" class="trace-wave" fill="none" />' +
+    segmentsStr + '</svg>';
+}
+
+/* ---------------------------------------------------------------
+   状態管理
+--------------------------------------------------------------- */
+const state = {
+  isRecording: false, isAnalyzing: false, error: null, result: null,
+  history: [], calibration: [],
+  openDetail: false, openRefs: false, confirmClear: false,
+  elapsed: 0, expandedId: null, copied: false, correcting: false,
+};
+
+try { const h = localStorage.getItem(STORAGE_KEY); if (h) state.history = JSON.parse(h); } catch (e) {}
+try { const c = localStorage.getItem(CALIBRATION_KEY); if (c) state.calibration = JSON.parse(c); } catch (e) {}
+
+function persistHistory() { try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state.history)); } catch (e) {} }
+function persistCalibration() { try { localStorage.setItem(CALIBRATION_KEY, JSON.stringify(state.calibration)); } catch (e) {} }
+
+let mediaRecorder = null, timerInterval = null;
+
+function fmtTime(ts) {
+  const d = new Date(ts);
+  return (d.getMonth() + 1) + "/" + d.getDate() + " " + String(d.getHours()).padStart(2, "0") + ":" + String(d.getMinutes()).padStart(2, "0");
+}
+function sourceLabel(s) { return s === "calibration" ? "個体データ判定" : s === "correction" ? "手動補正・学習済み" : "一般傾向判定"; }
+
+async function processBlob(blob) {
+  state.error = null;
+  state.isAnalyzing = true;
+  state.result = null;
+  state.correcting = false;
+  render();
+  try {
+    const arrayBuffer = await blob.arrayBuffer();
+    const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+    const audioCtx = new AudioContextClass();
+    const audioBuffer = await audioCtx.decodeAudioData(arrayBuffer.slice(0));
+    const features = extractFeatures(audioBuffer);
+    audioCtx.close();
+
+    if (features.tooQuiet) {
+      state.error = "音が小さすぎるか短すぎて解析できませんでした。クーちゃんに近づけて、もう一度どうぞ。";
+      state.isAnalyzing = false;
+      render();
+      return;
+    }
+
+    const vector = featureVector(features);
+    const nn = nearestCalibration(vector, state.calibration);
+    let category, source;
+    if (nn) {
+      category = CATEGORY[nn.categoryKey] || { key: nn.categoryKey, label: nn.label, color: nn.color, text: "#4A3324", lines: [nn.label] };
+      source = "calibration";
+    } else {
+      category = classify(features);
+      source = "rule";
+    }
+
+    const line = category.lines[Math.floor(Math.random() * category.lines.length)];
+    const url = URL.createObjectURL(blob);
+    const entry = {
+      id: Date.now().toString(), timestamp: Date.now(),
+      category: category.key, label: category.label, color: category.color, text: category.text,
+      line, source, vector,
+      duration: features.duration, meanPitch: features.meanPitch, voicedRatio: features.voicedRatio,
+      contourDelta: features.contourDelta, stdev: features.stdev, syllables: features.syllables,
+      purrScore: features.purrScore, soliScore: features.soliScore, zcr: features.zcr,
+    };
+    state.result = Object.assign({}, entry, { waveform: features.waveform, pitchContour: features.pitchContour, audioUrl: url });
+    state.history = [entry].concat(state.history).slice(0, 200);
+    persistHistory();
+  } catch (e) {
+    console.error(e);
+    state.error = "音声を解析できませんでした。別のファイルで試してみてください。";
+  } finally {
+    state.isAnalyzing = false;
+    render();
+  }
+}
+
+async function startRecording() {
+  state.error = null;
+  try {
+    const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+    const mimeType = ["audio/webm", "audio/mp4", "audio/ogg"].find((t) => MediaRecorder.isTypeSupported && MediaRecorder.isTypeSupported(t));
+    mediaRecorder = new MediaRecorder(stream, mimeType ? { mimeType } : undefined);
+    const chunks = [];
+    mediaRecorder.ondataavailable = (e) => { if (e.data.size > 0) chunks.push(e.data); };
+    mediaRecorder.onstop = () => {
+      stream.getTracks().forEach((t) => t.stop());
+      clearInterval(timerInterval);
+      state.isRecording = false;
+      const blob = new Blob(chunks, { type: mimeType || "audio/webm" });
+      processBlob(blob);
+    };
+    mediaRecorder.start();
+    state.isRecording = true;
+    state.elapsed = 0;
+    render();
+    timerInterval = setInterval(() => { state.elapsed++; render(); }, 1000);
+  } catch (e) {
+    state.error = "マイクにアクセスできませんでした。下の「ファイル」から音声ファイルを選んでみてください。";
+    render();
+  }
+}
+function stopRecording() { if (mediaRecorder) mediaRecorder.stop(); }
+
+function handleFileChange(e) {
+  const file = e.target.files && e.target.files[0];
+  if (file) processBlob(file);
+  e.target.value = "";
+}
+
+function clearHistoryNow() {
+  state.history = [];
+  state.confirmClear = false;
+  persistHistory();
+  render();
+}
+
+async function copyJson() {
+  try {
+    await navigator.clipboard.writeText(JSON.stringify(state.history, null, 2));
+    state.copied = true;
+    render();
+    setTimeout(() => { state.copied = false; render(); }, 1800);
+  } catch (e) {}
+}
+
+function correctCategory(cat) {
+  if (!state.result || !state.result.vector) return;
+  const calEntry = { id: Date.now().toString(), vector: state.result.vector, categoryKey: cat.key, label: cat.label, color: cat.color, timestamp: Date.now() };
+  state.calibration = [calEntry].concat(state.calibration).slice(0, 300);
+  persistCalibration();
+  const newLine = cat.lines[Math.floor(Math.random() * cat.lines.length)];
+  state.result = Object.assign({}, state.result, { category: cat.key, label: cat.label, color: cat.color, text: cat.text, line: newLine, source: "correction" });
+  if (state.history.length) {
+    state.history = state.history.slice();
+    state.history[0] = Object.assign({}, state.history[0], { category: cat.key, label: cat.label, color: cat.color, text: cat.text, line: newLine, source: "correction" });
+    persistHistory();
+  }
+  state.correcting = false;
+  render();
+}
+
+/* ---------------------------------------------------------------
+   レンダリング
+--------------------------------------------------------------- */
+function render() {
+  const bubbleText = state.isAnalyzing ? "うーん、ちょっと待って…" : (state.result ? state.result.line : "録音してみてね!");
+  const bubbleColor = state.result ? state.result.color : "#F2E4D0";
+
+  let html = '<div class="wrap">';
+  html += '<div class="mascot-row ' + (state.isRecording ? "recording" : "") + '">';
+  html += catFaceHtml("bicolor");
+  html += '<div class="bubble" style="--bshadow:' + bubbleColor + '66">「' + escapeHtml(bubbleText) + '」</div>';
+  html += catFaceHtml("black");
+  html += '</div>';
+
+  html += '<p class="title">クートラ翻訳機</p>';
+  html += '<p class="tagline">クーちゃんのきもち、通訳中!</p>';
+  html += '<p class="caveat-line">鳴き声の高さ・長さ・リズムから傾向を推定するよ。断定的な翻訳ではないから、参考程度にね。</p>';
+
+  html += '<div class="btnrow">';
+  html += '<button class="btn rec ' + (state.isRecording ? "on" : "") + '" data-action="record-toggle" ' + (state.isAnalyzing ? "disabled" : "") + '>' +
+    (state.isRecording ? "⏹ 録音中 " + state.elapsed + "s" : "🎙 録音する") + '</button>';
+  html += '<button class="btn up" data-action="trigger-file" ' + (state.isAnalyzing || state.isRecording ? "disabled" : "") + '>📁 ファイル</button>';
+  html += '</div>';
+
+  html += '<div class="status-row ' + (state.error ? "error" : "") + '">';
+  if (state.isAnalyzing) html += '<span class="spin">⏳</span> 解析中…';
+  else if (state.error) html += escapeHtml(state.error);
+  html += '</div>';
+
+  if (state.result) {
+    const r = state.result;
+    html += '<div class="result-card">';
+    html += '<div class="tag-row"><span class="tag" style="background:' + r.color + ';color:' + r.text + '">✨ ' + escapeHtml(r.label) + '</span>';
+    html += '<span class="source-tag">' + sourceLabel(r.source) + '</span></div>';
+    html += '<p class="result-line">「' + escapeHtml(r.line) + '」</p>';
+    html += '<p class="caveat">傾向の推定です。実際の意味とは限りません。</p>';
+    html += traceViewHtml(r.waveform, r.pitchContour);
+    if (r.audioUrl) html += '<audio controls src="' + r.audioUrl + '"></audio>';
+    html += '<button class="detail-toggle" data-action="toggle-detail">' + (state.openDetail ? "▲" : "▼") + ' 解析データを見る</button>';
+    if (state.openDetail) {
+      html += '<div class="detail-grid">';
+      html += '<div>継続時間 <span class="v">' + r.duration.toFixed(2) + 's</span></div>';
+      html += '<div>音節数 <span class="v">' + r.syllables + '</span></div>';
+      html += '<div>平均音高 <span class="v">' + (r.meanPitch ? Math.round(r.meanPitch) + "Hz" : "—") + '</span></div>';
+      html += '<div>有声率 <span class="v">' + (r.voicedRatio * 100).toFixed(0) + '%</span></div>';
+      html += '<div>音高変化 <span class="v">' + (r.contourDelta > 0 ? "上昇" : "下降/平坦") + ' (' + r.contourDelta.toFixed(0) + 'Hz)</span></div>';
+      html += '<div>ゆらぎ <span class="v">' + r.stdev.toFixed(0) + 'Hz</span></div>';
+      html += '<div>ゴロゴロ度 <span class="v">' + (r.purrScore * 100).toFixed(0) + '%</span></div>';
+      html += '<div>せがみ成分 <span class="v">' + (r.soliScore * 100).toFixed(0) + '%</span></div>';
+      html += '</div>';
+    }
+    html += '<div class="correct-toggle">';
+    if (!state.correcting) {
+      html += '<button class="link-btn" data-action="toggle-correcting">判定が違う場合はここで教える</button>';
+    } else {
+      html += '<button class="link-btn" data-action="toggle-correcting" style="margin-bottom:10px">閉じる</button>';
+      html += '<div class="chip-row">';
+      CATEGORY_LIST.forEach((c) => {
+        html += '<button class="chip" style="background:' + c.color + ';color:' + c.text + '" data-action="correct" data-key="' + c.key + '">' + escapeHtml(c.label) + '</button>';
+      });
+      html += '</div>';
+    }
+    html += '</div></div>';
+  }
+
+  html += '<div class="section-head"><h2>観察ログ</h2><div class="head-actions"><span class="count">' + state.history.length + '件 / 学習' + state.calibration.length + '件</span></div></div>';
+  html += '<div class="section-head" style="margin-top:-6px"><div class="head-actions" style="margin-left:auto">';
+  if (state.history.length > 0) {
+    html += '<button class="link-btn" data-action="copy-json">📋 ' + (state.copied ? "コピーしました" : "JSON") + '</button>';
+    if (state.confirmClear) html += '<button class="link-btn" data-action="clear-now">本当に消去する</button>';
+    else html += '<button class="link-btn" data-action="confirm-clear">🗑 消去</button>';
+  }
+  html += '</div></div>';
+
+  if (state.history.length === 0) {
+    html += '<div class="log-empty">まだログがありません。録音するか、音声ファイルを選んでみてね。</div>';
+  } else {
+    state.history.forEach((h) => {
+      html += '<div class="log-entry" style="border-left-color:' + h.color + '" data-action="toggle-history" data-id="' + h.id + '">';
+      html += '<span class="log-time">' + fmtTime(h.timestamp) + '</span><span style="flex:1">' + escapeHtml(h.label) + '</span></div>';
+      if (state.expandedId === h.id) {
+        html += '<div class="log-detail"><p>「' + escapeHtml(h.line) + '」</p>継続時間 ' + h.duration.toFixed(2) + 's ・ 音節数 ' + h.syllables + ' ・ ' + sourceLabel(h.source) + '</div>';
+      }
+    });
+  }
+
+  html += '<div class="refs-section"><button class="refs-toggle" data-action="toggle-refs">📖 ' + (state.openRefs ? "▲" : "▼") + ' 参考にした研究</button>';
+  if (state.openRefs) {
+    html += '<ul class="refs-list">' +
+      '<li>Schötz, van de Weijer &amp; Eklund (2019)「Melody matters」PeerJ Preprints — 上昇調/下降調と文脈の関係</li>' +
+      '<li>McComb, Taylor, Wilson &amp; Charlton (2009)「The cry embedded within the purr」Current Biology — せがみ purr の220-520Hz成分</li>' +
+      '<li>Context effects on duration, fundamental frequency, and intonation in human-directed domestic cat meows (2023) Applied Animal Behaviour Science</li>' +
+      '<li>Sedova et al. (2023)「Meows of captive feral domestic cats」Behaviour</li>' +
+      '<li>Meows encode less individual information than purrs... (2025) Scientific Reports</li>' +
+      '<li>Tavernier et al. (2020) の分類、meowsic.se(Schötz)の音声タイプ一覧</li></ul>';
+  }
+  html += '</div>';
+
+  html += '<p class="footer-note">しきい値は文献の報告値を参考にした経験則です。判定がずれたら「判定が違う場合はここで教える」から直してね。以後は個体データが優先されます。ログと学習データはこの端末のブラウザ内に保存されます。</p>';
+  html += '<p class="hostnote">クートラ翻訳機 — スタンドアロン版</p>';
+  html += '</div>';
+
+  document.getElementById('app-content').innerHTML = html;
+}
+
+/* ---------------------------------------------------------------
+   イベント委譲 & 初期化
+--------------------------------------------------------------- */
+document.getElementById('app-root').addEventListener('click', (e) => {
+  const t = e.target.closest('[data-action]');
+  if (!t) return;
+  const action = t.dataset.action;
+  if (action === 'record-toggle') { state.isRecording ? stopRecording() : startRecording(); }
+  else if (action === 'trigger-file') { document.getElementById('file-input').click(); }
+  else if (action === 'toggle-detail') { state.openDetail = !state.openDetail; render(); }
+  else if (action === 'toggle-refs') { state.openRefs = !state.openRefs; render(); }
+  else if (action === 'toggle-correcting') { state.correcting = !state.correcting; render(); }
+  else if (action === 'correct') { correctCategory(CATEGORY[t.dataset.key]); }
+  else if (action === 'copy-json') { copyJson(); }
+  else if (action === 'confirm-clear') { state.confirmClear = true; render(); }
+  else if (action === 'clear-now') { clearHistoryNow(); }
+  else if (action === 'toggle-history') { const id = t.dataset.id; state.expandedId = state.expandedId === id ? null : id; render(); }
+});
+document.getElementById('file-input').addEventListener('change', handleFileChange);
+
+render();
+</script>
+</body>
+</html>
