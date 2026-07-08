@@ -52,7 +52,7 @@ body {
 
 .bubble {
   flex: 1; background: #FFFFFF; border-radius: 18px; padding: 12px 14px;
-  font-weight: 700; font-size: 13.5px; color: #4A3324; position: relative;
+  font-weight: 700; font-size: 17.5px; color: #4A3324; position: relative;
   box-shadow: 0 6px 0 var(--bshadow); text-align: center; min-height: 20px;
 }
 .bubble::before, .bubble::after {
@@ -62,15 +62,15 @@ body {
 .bubble::before { left: -7px; border-right: 9px solid #FFFFFF; }
 .bubble::after { right: -7px; border-left: 9px solid #FFFFFF; }
 
-.title { font-family: 'Mochiy Pop One', sans-serif; font-size: 26px; color: #FF7A52; text-align: center; margin: 4px 0 2px; }
-.tagline { text-align: center; font-size: 12px; color: #B8894F; margin: 0 0 4px; font-weight: 700; }
-.caveat-line { text-align: center; font-size: 10.5px; color: #C4A97C; margin: 0 0 20px; line-height: 1.6; }
+.title { font-family: 'Mochiy Pop One', sans-serif; font-size: 33.5px; color: #FF7A52; text-align: center; margin: 4px 0 2px; }
+.tagline { text-align: center; font-size: 15.5px; color: #B8894F; margin: 0 0 4px; font-weight: 700; }
+.caveat-line { text-align: center; font-size: 14px; color: #C4A97C; margin: 0 0 20px; line-height: 1.6; }
 
 .btnrow { display: flex; gap: 10px; margin-bottom: 8px; }
 .btn {
   flex: 1; display: flex; align-items: center; justify-content: center; gap: 8px;
   padding: 15px 8px; border-radius: 18px; border: none; cursor: pointer;
-  font-family: 'Zen Maru Gothic', sans-serif; font-weight: 900; font-size: 13.5px; color: #fff;
+  font-family: 'Zen Maru Gothic', sans-serif; font-weight: 900; font-size: 17.5px; color: #fff;
 }
 .btn:active { transform: scale(0.97); }
 .btn:disabled { opacity: 0.45; cursor: not-allowed; }
@@ -80,7 +80,7 @@ body {
 
 .status-row {
   min-height: 20px; margin: 10px 0 18px;
-  font-size: 12px; font-weight: 700; color: #6EA8C6;
+  font-size: 15.5px; font-weight: 700; color: #6EA8C6;
   display: flex; align-items: center; gap: 6px;
 }
 .status-row.error { color: #E85A4F; }
@@ -89,10 +89,10 @@ body {
 
 .result-card { background: #FFFFFF; border-radius: 22px; padding: 18px; margin-bottom: 20px; border: 3px solid #FFE3C2; }
 .tag-row { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-bottom: 10px; }
-.tag { display: inline-flex; align-items: center; gap: 4px; font-weight: 900; font-size: 11.5px; padding: 5px 12px; border-radius: 999px; }
-.source-tag { font-size: 10px; font-weight: 700; padding: 4px 9px; border-radius: 999px; background: #FFF3E0; color: #B8894F; }
-.result-line { font-size: 19px; font-weight: 900; color: #4A3324; margin: 0 0 4px; }
-.caveat { font-size: 11px; color: #C4A97C; margin: 0 0 14px; }
+.tag { display: inline-flex; align-items: center; gap: 4px; font-weight: 900; font-size: 14.5px; padding: 5px 12px; border-radius: 999px; }
+.source-tag { font-size: 14px; font-weight: 700; padding: 4px 9px; border-radius: 999px; background: #FFF3E0; color: #B8894F; }
+.result-line { font-size: 24.5px; font-weight: 900; color: #4A3324; margin: 0 0 4px; }
+.caveat { font-size: 14px; color: #C4A97C; margin: 0 0 14px; }
 
 .trace-svg { width: 100%; height: 84px; display: block; margin-bottom: 12px; }
 .trace-baseline { stroke: #FFE3C2; stroke-width: 1; }
@@ -104,13 +104,13 @@ audio { width: 100%; height: 32px; margin-bottom: 12px; }
 .detail-toggle, .refs-toggle, .link-btn {
   display: flex; align-items: center; gap: 6px;
   background: none; border: none; cursor: pointer;
-  font-family: 'Zen Maru Gothic', sans-serif; font-weight: 700; font-size: 11.5px;
+  font-family: 'Zen Maru Gothic', sans-serif; font-weight: 700; font-size: 14.5px;
   color: #B8894F; padding: 0;
 }
 .detail-grid {
   margin-top: 12px; margin-bottom: 4px;
   display: grid; grid-template-columns: 1fr 1fr; gap: 8px 14px;
-  font-family: 'JetBrains Mono', monospace; font-size: 10.5px;
+  font-family: 'JetBrains Mono', monospace; font-size: 14px;
   color: #B8894F; background: #FFF8ED; border-radius: 12px; padding: 12px;
 }
 .detail-grid .v { color: #4A3324; font-weight: 700; }
@@ -118,27 +118,39 @@ audio { width: 100%; height: 32px; margin-bottom: 12px; }
 .correct-toggle { margin-top: 14px; padding-top: 12px; border-top: 2px dashed #FFE3C2; }
 .correct-toggle .link-btn { margin-bottom: 10px; }
 .chip-row { display: flex; flex-wrap: wrap; gap: 6px; }
-.chip { font-size: 11px; font-weight: 900; padding: 6px 12px; border-radius: 999px; border: none; cursor: pointer; font-family: 'Zen Maru Gothic', sans-serif; }
+.chip { font-size: 14px; font-weight: 900; padding: 6px 12px; border-radius: 999px; border: none; cursor: pointer; font-family: 'Zen Maru Gothic', sans-serif; }
 
 .section-head { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 12px; }
-.section-head h2 { font-family: 'Mochiy Pop One', sans-serif; font-size: 15px; color: #FF7A52; margin: 0; }
-.count { font-family: 'JetBrains Mono', monospace; font-size: 10.5px; color: #B8894F; }
+.section-head h2 { font-family: 'Mochiy Pop One', sans-serif; font-size: 19px; color: #FF7A52; margin: 0; }
+.count { font-family: 'JetBrains Mono', monospace; font-size: 14px; color: #B8894F; }
 .head-actions { display: flex; gap: 14px; align-items: center; }
 
-.log-empty { font-size: 12px; color: #B8894F; border: 2px dashed #FFE3C2; border-radius: 14px; padding: 20px; text-align: center; }
+.log-empty { font-size: 15.5px; color: #B8894F; border: 2px dashed #FFE3C2; border-radius: 14px; padding: 20px; text-align: center; }
 .log-entry {
   display: flex; align-items: center; gap: 10px; background: #FFFFFF;
   border-radius: 14px; padding: 10px 12px; margin-bottom: 8px;
-  border-left: 6px solid; font-size: 12.5px; color: #4A3324; font-weight: 700; cursor: pointer;
+  border-left: 6px solid; font-size: 16px; color: #4A3324; font-weight: 700; cursor: pointer;
 }
-.log-time { font-size: 10.5px; color: #B8894F; width: 58px; flex-shrink: 0; font-weight: 700; }
-.log-detail { margin-top: -2px; margin-bottom: 8px; padding: 0 4px 8px 14px; font-size: 11px; color: #B8894F; }
+.log-time { font-size: 14px; color: #B8894F; width: 74px; flex-shrink: 0; font-weight: 700; }
+.log-detail { margin-top: -2px; margin-bottom: 8px; padding: 0 4px 8px 14px; font-size: 14px; color: #B8894F; }
 .log-detail p { margin: 0 0 6px; font-style: italic; }
 
 .refs-section { margin-top: 30px; border-top: 2px dashed #FFE3C2; padding-top: 16px; }
-.refs-list { margin: 12px 0 0; padding-left: 18px; font-size: 11px; line-height: 1.9; color: #B8894F; }
-.footer-note { margin-top: 14px; font-size: 10.5px; line-height: 1.8; color: #C4A97C; }
-.hostnote { margin-top: 20px; font-size: 10px; line-height: 1.8; color: #D9C7A0; text-align: center; }
+.refs-list { margin: 12px 0 0; padding-left: 18px; font-size: 14px; line-height: 1.9; color: #B8894F; }
+.footer-note { margin-top: 14px; font-size: 14px; line-height: 1.8; color: #C4A97C; }
+.hostnote { margin-top: 20px; font-size: 14px; line-height: 1.8; color: #D9C7A0; text-align: center; }
+
+.range-card { background: #FFFFFF; border-radius: 22px; padding: 16px; margin-bottom: 16px; border: 3px solid #CDEBF7; }
+.range-title { font-weight: 900; font-size: 16px; color: #3D9BC0; margin-bottom: 10px; }
+.range-svg { width: 100%; height: 80px; display: block; border-radius: 12px; background: #FFF8ED; }
+.range-labels { display: flex; justify-content: space-between; align-items: center; font-size: 13.5px; font-weight: 700; color: #6EA8C6; margin: 8px 2px 2px; }
+.range-slider { width: 100%; margin: 8px 0; height: 26px; }
+.range-hint { font-size: 13px; color: #B8894F; margin: 2px 0 0; font-weight: 700; }
+.range-btns { display: flex; gap: 10px; margin-top: 12px; }
+.rbtn { flex: 1; padding: 13px 8px; border-radius: 14px; border: none; cursor: pointer; font-family: 'Zen Maru Gothic', sans-serif; font-weight: 900; font-size: 15px; }
+.rbtn.play { background: #EAF6FB; color: #3D9BC0; }
+.rbtn.go { background: #6EC6E8; color: #fff; box-shadow: 0 4px 0 #3D9BC0; }
+.rbtn:active { transform: scale(0.97); }
 </style>
 </head>
 <body>
@@ -403,6 +415,7 @@ const state = {
   history: [], calibration: [],
   openDetail: false, openRefs: false, confirmClear: false,
   elapsed: 0, expandedId: null, copied: false, correcting: false,
+  currentAudio: null, fullWaveform: null, rangeStart: 0, rangeEnd: 1,
 };
 
 try { const h = localStorage.getItem(STORAGE_KEY); if (h) state.history = JSON.parse(h); } catch (e) {}
@@ -412,6 +425,7 @@ function persistHistory() { try { localStorage.setItem(STORAGE_KEY, JSON.stringi
 function persistCalibration() { try { localStorage.setItem(CALIBRATION_KEY, JSON.stringify(state.calibration)); } catch (e) {} }
 
 let mediaRecorder = null, timerInterval = null;
+let rangeSource = null, rangeCtx = null;
 
 function fmtTime(ts) {
   const d = new Date(ts);
@@ -424,53 +438,143 @@ async function processBlob(blob) {
   state.isAnalyzing = true;
   state.result = null;
   state.correcting = false;
+  state.currentAudio = null;
   render();
   try {
     const arrayBuffer = await blob.arrayBuffer();
     const AudioContextClass = window.AudioContext || window.webkitAudioContext;
     const audioCtx = new AudioContextClass();
     const audioBuffer = await audioCtx.decodeAudioData(arrayBuffer.slice(0));
-    const features = extractFeatures(audioBuffer);
+    const sampleRate = audioBuffer.sampleRate;
+    // 復号バッファをコピーして保持（audioCtxを閉じても使えるように）
+    const channelData = audioBuffer.getChannelData(0).slice(0);
     audioCtx.close();
 
-    if (features.tooQuiet) {
-      state.error = "音が小さすぎるか短すぎて解析できませんでした。クーちゃんに近づけて、もう一度どうぞ。";
-      state.isAnalyzing = false;
-      render();
-      return;
-    }
-
-    const vector = featureVector(features);
-    const nn = nearestCalibration(vector, state.calibration);
-    let category, source;
-    if (nn) {
-      category = CATEGORY[nn.categoryKey] || { key: nn.categoryKey, label: nn.label, color: nn.color, text: "#4A3324", lines: [nn.label] };
-      source = "calibration";
-    } else {
-      category = classify(features);
-      source = "rule";
-    }
-
-    const line = category.lines[Math.floor(Math.random() * category.lines.length)];
     const url = URL.createObjectURL(blob);
-    const entry = {
-      id: Date.now().toString(), timestamp: Date.now(),
-      category: category.key, label: category.label, color: category.color, text: category.text,
-      line, source, vector,
-      duration: features.duration, meanPitch: features.meanPitch, voicedRatio: features.voicedRatio,
-      contourDelta: features.contourDelta, stdev: features.stdev, syllables: features.syllables,
-      purrScore: features.purrScore, soliScore: features.soliScore, zcr: features.zcr,
-    };
-    state.result = Object.assign({}, entry, { waveform: features.waveform, pitchContour: features.pitchContour, audioUrl: url });
-    state.history = [entry].concat(state.history).slice(0, 200);
-    persistHistory();
+    state.currentAudio = { channelData, sampleRate, duration: channelData.length / sampleRate, url };
+    state.fullWaveform = downsample(channelData, 280);
+    state.rangeStart = 0;
+    state.rangeEnd = 1;
+    // まずは全体を解析（新しいログとして追加）
+    analyzeSelection(true);
   } catch (e) {
     console.error(e);
     state.error = "音声を解析できませんでした。別のファイルで試してみてください。";
-  } finally {
     state.isAnalyzing = false;
     render();
   }
+}
+
+/* 現在の音声の、選択範囲だけを解析する。isNew=true で新規ログ、false で直近ログを更新 */
+function analyzeSelection(isNew) {
+  const a = state.currentAudio;
+  if (!a) return;
+  const n = a.channelData.length;
+  let s = Math.floor(state.rangeStart * n);
+  let e = Math.floor(state.rangeEnd * n);
+  if (e <= s) { s = 0; e = n; }
+  const slice = a.channelData.subarray(s, e);
+  const shim = { sampleRate: a.sampleRate, getChannelData: function () { return slice; } };
+
+  let features;
+  try { features = extractFeatures(shim); }
+  catch (err) { console.error(err); state.error = "この範囲を解析できませんでした。"; state.isAnalyzing = false; render(); return; }
+
+  if (features.tooQuiet) {
+    state.error = "選んだ範囲は音が小さすぎるか短すぎます。範囲を広げてね。";
+    state.isAnalyzing = false;
+    render();
+    return;
+  }
+  state.error = null;
+
+  const vector = featureVector(features);
+  const nn = nearestCalibration(vector, state.calibration);
+  let category, source;
+  if (nn) {
+    category = CATEGORY[nn.categoryKey] || { key: nn.categoryKey, label: nn.label, color: nn.color, text: "#4A3324", lines: [nn.label] };
+    source = "calibration";
+  } else {
+    category = classify(features);
+    source = "rule";
+  }
+
+  const line = category.lines[Math.floor(Math.random() * category.lines.length)];
+  const id = (!isNew && state.result) ? state.result.id : Date.now().toString();
+  const timestamp = (!isNew && state.result) ? state.result.timestamp : Date.now();
+  const entry = {
+    id: id, timestamp: timestamp,
+    category: category.key, label: category.label, color: category.color, text: category.text,
+    line, source, vector,
+    duration: features.duration, meanPitch: features.meanPitch, voicedRatio: features.voicedRatio,
+    contourDelta: features.contourDelta, stdev: features.stdev, syllables: features.syllables,
+    purrScore: features.purrScore, soliScore: features.soliScore, zcr: features.zcr,
+  };
+  state.result = Object.assign({}, entry, { waveform: features.waveform, pitchContour: features.pitchContour, audioUrl: a.url });
+
+  if (isNew) {
+    state.history = [entry].concat(state.history).slice(0, 200);
+  } else {
+    const idx = state.history.findIndex(function (h) { return h.id === entry.id; });
+    if (idx >= 0) { state.history = state.history.slice(); state.history[idx] = entry; }
+    else { state.history = [entry].concat(state.history).slice(0, 200); }
+  }
+  persistHistory();
+  state.isAnalyzing = false;
+  render();
+}
+
+/* 選択範囲だけを再生 */
+function playRange() {
+  const a = state.currentAudio;
+  if (!a) return;
+  try {
+    if (rangeSource) { try { rangeSource.stop(); } catch (e) {} rangeSource = null; }
+    const n = a.channelData.length;
+    let s = Math.floor(state.rangeStart * n);
+    let e = Math.floor(state.rangeEnd * n);
+    if (e - s < 1) return;
+    const slice = a.channelData.subarray(s, e);
+    const Ctx = window.AudioContext || window.webkitAudioContext;
+    if (!rangeCtx) rangeCtx = new Ctx();
+    if (rangeCtx.state === "suspended") rangeCtx.resume();
+    const buf = rangeCtx.createBuffer(1, slice.length, a.sampleRate);
+    if (buf.copyToChannel) buf.copyToChannel(slice, 0);
+    else buf.getChannelData(0).set(slice);
+    const src = rangeCtx.createBufferSource();
+    src.buffer = buf;
+    src.connect(rangeCtx.destination);
+    src.start();
+    rangeSource = src;
+  } catch (e) { console.error(e); }
+}
+
+/* スライダー操作中に、フル再描画せず選択帯と秒数だけ更新（ドラッグを滑らかに保つ） */
+function updateRangeUI() {
+  const ov = document.getElementById("sel-overlay");
+  if (ov) {
+    ov.setAttribute("x", (state.rangeStart * 300).toFixed(1));
+    ov.setAttribute("width", ((state.rangeEnd - state.rangeStart) * 300).toFixed(1));
+  }
+  const dur = state.currentAudio ? state.currentAudio.duration : 0;
+  const sd = document.getElementById("sel-dur");
+  if (sd) sd.textContent = "選択 " + (dur * (state.rangeEnd - state.rangeStart)).toFixed(2) + "秒 / 全体 " + dur.toFixed(2) + "秒";
+  const ss = document.getElementById("range-start"), ee = document.getElementById("range-end");
+  if (ss && Math.round(state.rangeStart * 1000) !== +ss.value) ss.value = Math.round(state.rangeStart * 1000);
+  if (ee && Math.round(state.rangeEnd * 1000) !== +ee.value) ee.value = Math.round(state.rangeEnd * 1000);
+}
+
+function rangeWaveHtml(wf, s, e) {
+  if (!wf || !wf.length) return "";
+  const w = 300, h = 80, mid = h / 2;
+  const max = Math.max.apply(null, wf.map(Math.abs).concat([0.001]));
+  const pts = wf.map(function (v, i) { return (i / (wf.length - 1)) * w + "," + (mid - (v / max) * (mid - 4)); }).join(" ");
+  const x = (s * w).toFixed(1), ww = ((e - s) * w).toFixed(1);
+  return '<svg viewBox="0 0 ' + w + ' ' + h + '" class="range-svg" preserveAspectRatio="none">' +
+    '<line x1="0" y1="' + mid + '" x2="' + w + '" y2="' + mid + '" class="trace-baseline" />' +
+    '<polyline points="' + pts + '" class="trace-wave" fill="none" />' +
+    '<rect id="sel-overlay" x="' + x + '" y="0" width="' + ww + '" height="' + h + '" fill="#6EC6E8" opacity="0.22" />' +
+    '</svg>';
 }
 
 async function startRecording() {
@@ -567,6 +671,22 @@ function render() {
   else if (state.error) html += escapeHtml(state.error);
   html += '</div>';
 
+  if (state.currentAudio) {
+    const dur = state.currentAudio.duration;
+    const selDur = dur * (state.rangeEnd - state.rangeStart);
+    html += '<div class="range-card">';
+    html += '<div class="range-title">🎚 かいせきする範囲をえらぶ</div>';
+    html += rangeWaveHtml(state.fullWaveform, state.rangeStart, state.rangeEnd);
+    html += '<div class="range-labels"><span>開始</span><span id="sel-dur">選択 ' + selDur.toFixed(2) + '秒 / 全体 ' + dur.toFixed(2) + '秒</span><span>終了</span></div>';
+    html += '<input type="range" class="range-slider" id="range-start" min="0" max="1000" value="' + Math.round(state.rangeStart * 1000) + '">';
+    html += '<input type="range" class="range-slider" id="range-end" min="0" max="1000" value="' + Math.round(state.rangeEnd * 1000) + '">';
+    html += '<p class="range-hint">青い帯が解析する部分だよ。いらない部分をスライダーで外してね。</p>';
+    html += '<div class="range-btns">';
+    html += '<button class="rbtn play" data-action="play-range">▶ 範囲を聞く</button>';
+    html += '<button class="rbtn go" data-action="analyze-range">この範囲で翻訳</button>';
+    html += '</div></div>';
+  }
+
   if (state.result) {
     const r = state.result;
     html += '<div class="result-card">';
@@ -660,6 +780,17 @@ document.getElementById('app-root').addEventListener('click', (e) => {
   else if (action === 'confirm-clear') { state.confirmClear = true; render(); }
   else if (action === 'clear-now') { clearHistoryNow(); }
   else if (action === 'toggle-history') { const id = t.dataset.id; state.expandedId = state.expandedId === id ? null : id; render(); }
+  else if (action === 'play-range') { playRange(); }
+  else if (action === 'analyze-range') { state.isAnalyzing = true; render(); setTimeout(function () { analyzeSelection(false); }, 10); }
+});
+document.getElementById('app-root').addEventListener('input', (e) => {
+  const el = e.target;
+  if (el.id !== 'range-start' && el.id !== 'range-end') return;
+  const MINGAP = 0.02;
+  const v = (+el.value) / 1000;
+  if (el.id === 'range-start') { state.rangeStart = Math.max(0, Math.min(v, state.rangeEnd - MINGAP)); }
+  else { state.rangeEnd = Math.min(1, Math.max(v, state.rangeStart + MINGAP)); }
+  updateRangeUI();
 });
 document.getElementById('file-input').addEventListener('change', handleFileChange);
 
